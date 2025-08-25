@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>予約完了</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<h1>予約完了！</h1>
+
+<div class="center-box">
+    <p><strong>{{ name }}</strong> さんの予約が完了しました。</p>
+    <p>{{ reserve_date }} {{ reserve_time }}</p>
+
+    <a href="{{ url_for('main_routes.index') }}">トップに戻る</a>
+
+</div>
+
+</body>
+</html>

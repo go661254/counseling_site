@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>予約一覧</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<!-- 日付検索フォーム -->
+<form action="{{ url_for('main_routes.search_by_date') }}" method="get">
+
+
+    <label for="search_date">日付で検索:</label>
+    <input type="date" name="search_date" id="search_date" required>
+    <input type="submit" value="検索">
+</form>
+
+<!-- 名前検索フォーム -->
+<form action="{{ url_for('main_routes.search_by_name') }}" method="get">
+    <label for="search_name">名前で検索:</label>
+    <input type="text" name="search_name" id="search_name" required>
+    <input type="submit" value="検索">
+</form>
+
+<h1>予約一覧</h1>
+
+<div class="center-box">
+    <table>
+        <thead>
+            <tr>
+                <th>名前</th><th>日付</th><th>時間</th><th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for r in reservations %}
+            <tr>
+                <td>{{ r.name }}</td>
+                <td>{{ r.date }}</td>
+                <td>{{ r.time }}</td>
+                <td>
+                    <a href="{{ url_for('main_routes.edit', id=r.id) }}">編集</a>
+                    <a href="{{ url_for('main_routes.delete_reservation', reservation_id=r.id) }}"
+                       onclick="return confirm('削除してよろしいですか？')">削除</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a class="button-link" href="/">トップに戻る</a>
+</div>
+
+</body>
+</html>

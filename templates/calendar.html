@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>予約カレンダー</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    
+<h1>{{ year }}年{{ month }}月のカレンダー</h1>
+
+<table>
+        <thead>
+            <tr>
+                <th>日</th>
+                <th>月</th>
+                <th>火</th>
+                <th>水</th>
+                <th>木</th>
+                <th>金</th>
+                <th>土</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for week in month_days %}
+                <tr>
+                    {% for day in week %}
+                {% set weekday = loop.index0 %}
+                {% set day_class = "" %}
+                {% if weekday == 0 %}
+                    {% set day_class = "sunday" %}
+                {% elif weekday == 6 %}
+                    {% set day_class = "saturday" %}
+                {% endif %}
+                <td class="{{ day_class }}">
+                    {% if day != 0 %}
+                        <strong>{{ day }}</strong><br>
+                        {% set date_str = "%04d-%02d-%02d"|format(year, month, day) %}
+                                {% if date_str in reservations %}
+                                        {% for time, name in reservations[date_str] %}
+                                <div class="reservation">{{ time }} {{ name }}</div>
+                                        {% endfor %}
+                        {% endif %}
+                    {% endif %}
+                </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+<a href="{{ url_for('calendar_routes.calendar_view') }}?year={{ prev_year }}&month={{ prev_month }}">← 前の月</a>
+<a href="{{ url_for('calendar_routes.calendar_view') }}?year={{ next_year }}&month={{ next_month }}">次の月 →</a>
+
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>予約フォーム</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<h1>予約フォーム</h1>
+
+{% if error %}
+<p class="error">{{ error }}</p>
+{% endif %}
+
+<form method="POST" action="{{ url_for('main_routes.confirm') }}">
+    <label>お名前</label>
+    <input type="text" name="name" value="{{ name|default('') }}">
+
+    <label>日付</label>
+    <input type="date" name="date" value="{{ reserve_date|default('') }}" min="{{ min_date }}">
+
+    <label>時間</label>
+    <input type="time" name="time" value="{{ reserve_time|default('') }}">
+
+    <input type="submit" value="確認画面へ">
+</form>
+
+<div class="center-box">
+    <a class="button-link" href="/list">予約一覧を見る</a>
+    <a class="button-link" href="/calendar">カレンダーで見る</a>
+</div>
+
+</body>
+</html>

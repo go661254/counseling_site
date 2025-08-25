@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>予約編集</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .error-message {
+            color: red;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>予約編集</h1>
+
+<!-- エラーメッセージ表示 -->
+{% if error %}
+    <div class="error-message">{{ error }}</div>
+{% endif %}
+
+<form action="{{ url_for('main_routes.edit', id=reservation_id) }}" method="post">
+    <label for="name">名前:</label>
+    <input type="text" id="name" name="name" value="{{ name }}" required><br>
+
+    <label for="date">日付:</label>
+    <input type="date" id="date" name="date" value="{{ reserve_date }}" min="{{ min_date }}" required><br>
+
+    <label for="time">時間:</label>
+    <input type="time" id="time" name="time" value="{{ reserve_time }}" required><br>
+
+    <input type="submit" value="更新">
+</form>
+
+<a href="{{ url_for('main_routes.reservation_list') }}">予約一覧に戻る</a>
+
+</body>
+</html>

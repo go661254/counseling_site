@@ -1,0 +1,185 @@
+/* ------------------------------
+   ベースの全体スタイル
+------------------------------ */
+body {
+  font-family: "Segoe UI", sans-serif;
+  background-color: #f9f9f9;
+  margin: 0;
+  padding: 20px;
+  color: #333;
+}
+
+h1 {
+  text-align: center;
+  color: #2c3e50;
+}
+
+/* ------------------------------
+   フォーム関連
+------------------------------ */
+form {
+  max-width: 400px;
+  margin: 0 auto;
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+label {
+  display: block;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+input[type="text"],
+input[type="date"],
+input[type="time"] {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+input[type="submit"],
+button {
+  margin-top: 20px;
+  width: 100%;
+  padding: 10px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+input[type="submit"]:hover,
+button:hover {
+  background-color: #2980b9;
+}
+
+/* ------------------------------
+   メッセージ・エラーテキスト
+------------------------------ */
+p.error {
+  color: red;
+  text-align: center;
+}
+
+/* ------------------------------
+   汎用コンポーネント
+------------------------------ */
+.center-box {
+  display: flex;
+  flex-direction: column; /* 縦に並べる */
+  align-items: center;    /* 中央に揃える */
+  gap: 10px;              /* ボタンの間のすきま */
+  margin-top: 30px; /* 上の余白 */
+}
+
+a.button-link {
+  display: flex;                /* フレックスボックス化！ */
+  justify-content: center;     /* 横方向に中央揃え */
+  align-items: center;         /* 縦方向に中央揃え */
+  width: 300px;                /* 幅を固定（必要なら調整してOK） */
+  height: 50px;                /* 高さも固定（自由に変更してOK） */
+  padding: 10px;
+  background-color: #3498db;
+  color: white;
+  border-radius: 5px;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+
+
+a.button-link:hover {
+  background-color: #2980b9;
+}
+
+/* ------------------------------
+   カレンダー（table）デザイン
+------------------------------ */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  font-family: sans-serif;
+}
+
+th {
+  background-color: #f2f2f2;
+  color: #333;
+  padding: 10px;
+  border: 1px solid #ccc;
+}
+
+td {
+  height: 100px;
+  vertical-align: top;
+  text-align: left;
+  padding: 8px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+}
+
+td strong {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 16px;
+  color: #444;
+}
+
+td .reservation {
+  background-color: #e0f7fa;
+  padding: 3px 5px;
+  margin-bottom: 4px;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+td:hover {
+  background-color: #f9f9f9;
+}
+
+/* ------------------------------
+   曜日別スタイル（日・土）
+------------------------------ */
+.sunday, .sunday * {
+  color: red !important;
+  font-weight: bold;
+}
+
+.saturday, .saturday * {
+  color: blue !important;
+  font-weight: bold;
+}
+
+
+/* ------------------------------
+   モバイル対応（レスポンシブ）
+------------------------------ */
+@media (max-width: 600px) {
+  td {
+    height: auto;
+    font-size: 12px;
+  }
+
+  th {
+    font-size: 12px;
+    padding: 5px;
+  }
+}
+
+a {
+  color: #3498db;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}

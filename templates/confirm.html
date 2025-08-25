@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>確認画面</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+{% if error %}
+<p style="color: red; font-weight: bold;">{{ error }}</p>
+{% endif %}
+
+<h1>予約内容の確認</h1>
+
+<div class="center-box">
+    <p><strong>名前：</strong>{{ name }}</p>
+    <p><strong>日付：</strong>{{ reserve_date }}</p>
+    <p><strong>時間：</strong>{{ reserve_time }}</p>
+
+    <form method="POST" action="{{ url_for('main_routes.complete') }}">
+
+        <input type="hidden" name="name" value="{{ name }}">
+        <input type="hidden" name="date" value="{{ reserve_date }}">
+        <input type="hidden" name="time" value="{{ reserve_time }}">
+        <input type="submit" value="予約を確定する">
+    </form>
+
+    <form method="GET" action="/">
+        <input type="hidden" name="name" value="{{ name }}">
+        <input type="hidden" name="date" value="{{ reserve_date }}">
+        <input type="hidden" name="time" value="{{ reserve_time }}">
+        <button>戻って修正する</button>
+    </form>
+</div>
+
+</body>
+</html>
