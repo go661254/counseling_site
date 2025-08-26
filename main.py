@@ -7,4 +7,7 @@ app.register_blueprint(main_routes)
 app.register_blueprint(calendar_routes)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=10000, debug=True)
