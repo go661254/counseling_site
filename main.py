@@ -6,6 +6,8 @@ from calendar_routes import calendar_routes
 app = Flask(__name__)
 app.register_blueprint(main_routes)
 app.register_blueprint(calendar_routes)
+app.secret_key = "go661254"  # セッション用の秘密鍵（本番ではもっと複雑なものにする）
+
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))  # Renderが指定するPORTを取得
