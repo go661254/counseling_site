@@ -47,6 +47,7 @@ def validate_reservation_input(name, reserve_date, reserve_time, allow_past=Fals
 
 # --- ルーティング ---
 @main_routes.route('/')
+@login_required
 def index():
     return render_template('index.html', min_date=date.today().isoformat())
 
@@ -89,6 +90,7 @@ def complete():
                            reserve_time=reserve_time)
 
 @main_routes.route('/list')
+@login_required
 def reservation_list():
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -108,6 +110,7 @@ def reservation_list():
     return render_template('list.html', reservations=reservations)
 
 @main_routes.route('/edit/<int:id>', methods=['GET', 'POST'])
+@login_required
 def edit(id):
     conn = get_db_connection()
 
@@ -176,11 +179,13 @@ def edit(id):
         return '予約が見つかりませんでした。', 404
 
 @main_routes.route('/delete/<int:reservation_id>', methods=['GET'])
+@login_required
 def delete_reservation(reservation_id):
     delete_reservation_by_id(reservation_id)
     return redirect(url_for('main_routes.reservation_list'))
 
 @main_routes.route('/search_by_date')
+@login_required
 def search_by_date():
     search_date = request.args.get('search_date')
     if not search_date:
