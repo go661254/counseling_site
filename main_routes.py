@@ -1,27 +1,28 @@
-from flask import Blueprint, request, render_template, redirect, url_for, Response
+from flask import Blueprint, request, render_template, redirect, url_for, Response, session
 from datetime import date, datetime
 from functools import wraps
-from db import get_connection, delete_reservation_by_id, add_reservation,is_reservation_conflict
+from db import get_connection, delete_reservation_by_id, add_reservation, is_reservation_conflict
 
 main_routes = Blueprint('main_routes', __name__, template_folder='templates')
 
-# --- ベーシック認証の設定 ---
-def check_auth(username, password):
-    return username == 'go' and password == '123'  # ここでユーザー名とパスワードを設定
-
-def authenticate():
-    return Response(
-        '認証が必要です。ユーザー名とパスワードを入力してください。', 401,
-        {'WWW-Authenticate': 'Basic realm="Login Required"'})
-
-def requires_auth(f):
+# ログイン必須のデコレータ
+def login_required(f):
     @wraps(f)
-    def decorated(*args, **kwargs):
-        auth = request.authorization
-        if not auth or not check_auth(auth.username, auth.password):
-            return authenticate()
+    def decorated_function(*args, **kwargs):
+        if "user" not in session:  # ログインしていない場合
+            return redirect(url_for("main_routes.login"))
         return f(*args, **kwargs)
-    return decorated
+    return decorated_function
+
+
+# パスワードのハッシュ化用
+from werkzeug.security import generate_password_hash, check_password_hash
+
+# テスト用ユーザー（初期は1ユーザー）
+# "admin" のパスワードは "password123" になります（学習用）。本番ではDBに移行してください。
+USERS = {
+    "admin": generate_password_hash("password123")
+}
 
 # --- 共通関数 ---
 def get_db_connection():
@@ -46,12 +47,10 @@ def validate_reservation_input(name, reserve_date, reserve_time, allow_past=Fals
 
 # --- ルーティング ---
 @main_routes.route('/')
-@requires_auth
 def index():
     return render_template('index.html', min_date=date.today().isoformat())
 
 @main_routes.route('/confirm', methods=['POST'])
-@requires_auth
 def confirm():
     name = request.form.get('name')
     reserve_date = request.form.get('date')
@@ -66,7 +65,6 @@ def confirm():
     return render_template('confirm.html', name=name, reserve_date=reserve_date, reserve_time=reserve_time)
 
 @main_routes.route('/complete', methods=['POST'])
-@requires_auth
 def complete():
     name = request.form.get('name')
     reserve_date = request.form.get('date')
@@ -91,7 +89,6 @@ def complete():
                            reserve_time=reserve_time)
 
 @main_routes.route('/list')
-@requires_auth
 def reservation_list():
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -111,7 +108,6 @@ def reservation_list():
     return render_template('list.html', reservations=reservations)
 
 @main_routes.route('/edit/<int:id>', methods=['GET', 'POST'])
-@requires_auth
 def edit(id):
     conn = get_db_connection()
 
@@ -180,13 +176,11 @@ def edit(id):
         return '予約が見つかりませんでした。', 404
 
 @main_routes.route('/delete/<int:reservation_id>', methods=['GET'])
-@requires_auth
 def delete_reservation(reservation_id):
     delete_reservation_by_id(reservation_id)
     return redirect(url_for('main_routes.reservation_list'))
 
 @main_routes.route('/search_by_date')
-@requires_auth
 def search_by_date():
     search_date = request.args.get('search_date')
     if not search_date:
@@ -214,7 +208,6 @@ def search_by_date():
 
 
 @main_routes.route('/search_name')
-@requires_auth
 def search_by_name():
     search_name = request.args.get('search_name')
     if not search_name:
@@ -240,3 +233,23 @@ def search_by_name():
         })
 
     return render_template('list.html', reservations=reservations)
+
+@main_routes.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+
+        # ユーザー存在チェック
+        if username in USERS and check_password_hash(USERS[username], password):
+            session['user'] = username  # ログイン状態にする
+            return redirect(url_for('main_routes.index'))
+        else:
+            return render_template('login.html', error='ユーザー名またはパスワードが違います')
+
+    return render_template('login.html')
+
+@main_routes.route('/logout')
+def logout():
+    session.pop("user", None)  # セッションから削除
+    return redirect(url_for("main_routes.login"))
